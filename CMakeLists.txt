@@ -4,7 +4,7 @@ project(myhttp)
 
 if(CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "-Wall -Wno-unused-parameter -fno-strict-aliasing -O3")
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11 ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -g -std=c++11 ${CMAKE_CXX_FLAGS}")
     add_definitions(-DGCC)
 endif()
 

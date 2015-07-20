@@ -113,8 +113,8 @@ int main()
               "<a href = \"/ignore\">ignore any error</a><br/>"
               "<a href = \"/monitor\">normal monitoring</a><br/>"
               "<br/>"
-              "monitoring : " << (monitor ? "on" : "OFF")<<"<br/>"
-              <<(halt_confirm ?"<a href = \"/halt\">CONFIRM HALT</a><br/>":"")
+              "monitoring : " << (monitor ? "on" : "OFF") << "<br/>"
+              << (halt_confirm ? "<a href = \"/halt\">CONFIRM HALT</a><br/>" : "")
               ;
             uv_buf_t buf;
             buf.len = res.str().length();
@@ -125,17 +125,16 @@ int main()
               delete[]reinterpret_cast<char*>(ctx->data);
               uv_shutdown_t *st = new uv_shutdown_t;
               uv_shutdown(st, ctx->handle, [](uv_shutdown_t *st, int status){
-                uv_close(reinterpret_cast<uv_handle_t*>(st->handle), [](uv_handle_t* handle){});
+                uv_close(reinterpret_cast<uv_handle_t*>(st->handle), [](uv_handle_t* handle){
+                  delete reinterpret_cast<http_parser*>(handle->data);
+                  delete reinterpret_cast<uv_stream_t*>(handle);
+                });
                 delete st;
               });
               delete ctx;
             });
             return length;
-          }, NULL, NULL, NULL, NULL, NULL, [](http_parser *parser)->int{ // complete
-            cout << "complete" << endl;
-            uv_close(reinterpret_cast<uv_handle_t*>(parser->data), [](uv_handle_t* handle){});
-            return 0;
-          }
+          }, NULL, NULL, NULL, NULL, NULL, NULL
         };
         http_parser_execute(reinterpret_cast<http_parser*>(stream->data), &settings, buf->base, nread);
       }
