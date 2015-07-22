@@ -51,7 +51,7 @@ int main()
     }
     else{
       cout << "cant connect mysql " << mysql_error(sql) << endl;
-      *reinterpret_cast<bool*>(ctx->data) = false;
+      error = true;
     }
     if (error){
       cout << "has mysql error!" << endl;
